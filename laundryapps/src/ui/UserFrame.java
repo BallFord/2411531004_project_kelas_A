@@ -20,11 +20,9 @@ import table.TableUser;
 
 public class UserFrame extends JFrame {
 
-	// --- [START] BAGIAN INI DIUBAH PERSIS SEPERTI FOTO INSTRUKSI ---
 	UserRepo usr = new UserRepo();
 	List<User> ls;
 	public String id;
-	// --- [END] BAGIAN INI DIUBAH PERSIS SEPERTI FOTO INSTRUKSI ---
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -33,27 +31,18 @@ public class UserFrame extends JFrame {
 	private JTextField txtUsername;
 	private JTextField txtPassword;
 	
-	/**
-	 * Method untuk mereset (mengosongkan) input field.
-	 */
 	public void reset() {
 		txtName.setText("");
 		txtUsername.setText("");
 		txtPassword.setText("");
 	}
 	
-	/**
-	 * Method untuk memuat data dari database ke JTable.
-	 */
 	public void loadTable() {
 		ls = usr.show();
 		TableUser tu = new TableUser(ls);
 		tableUsers.setModel(tu);
 	}
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
