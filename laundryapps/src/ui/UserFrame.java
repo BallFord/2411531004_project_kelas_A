@@ -61,8 +61,6 @@ public class UserFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public UserFrame() {
-		// Inisialisasi 'usr = new UserRepo();' tidak lagi diperlukan di sini
-		// karena sudah dilakukan di atas saat deklarasi variabel.
 		
 		setTitle("USERS");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
