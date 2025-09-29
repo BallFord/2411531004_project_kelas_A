@@ -5,6 +5,8 @@ public class Customer {
     String nama;
     String alamat;
     String nomorHp;
+    String email;
+    String telepon;
 
     public String getId() {
         return id;
@@ -36,6 +38,22 @@ public class Customer {
 
     public void setNomorHp(String nomorHp) {
         this.nomorHp = nomorHp;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public void setTelepon(String telepon) {
+        this.telepon = telepon;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public String getTelepon() {
+        return telepon;
     }
 
 }

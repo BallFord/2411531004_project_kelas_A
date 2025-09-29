@@ -4,25 +4,25 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import DAO.UserRepo;
+import model.User;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import java.awt.Font;
+import java.awt.SystemColor;
+import java.util.List;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import javax.swing.JScrollPane;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import DAO.UserRepo;
-import model.User;
+import java.awt.event.ActionEvent;
 import table.TableUser;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 
 public class UserFrame extends JFrame {
-
-	UserRepo usr = new UserRepo();
-	List<User> ls;
-	public String id;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -30,6 +30,22 @@ public class UserFrame extends JFrame {
 	private JTextField txtName;
 	private JTextField txtUsername;
 	private JTextField txtPassword;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UserFrame frame = new UserFrame();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	
 	public void reset() {
 		txtName.setText("");
@@ -37,31 +53,21 @@ public class UserFrame extends JFrame {
 		txtPassword.setText("");
 	}
 	
+	UserRepo usr = new UserRepo();
+	List<User> ls;
+	public String id;
+	
 	public void loadTable() {
 		ls = usr.show();
 		TableUser tu = new TableUser(ls);
 		tableUsers.setModel(tu);
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UserFrame frame = new UserFrame();
-					frame.setVisible(true);
-					frame.loadTable();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		tableUsers.getTableHeader().setVisible(true);
 	}
 
 	/**
 	 * Create the frame.
 	 */
 	public UserFrame() {
-		
 		setTitle("USERS");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 660, 660);
@@ -95,17 +101,22 @@ public class UserFrame extends JFrame {
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				User user = new User();
-				
-				user.setNama(txtName.getText());
-				user.setUsername(txtUsername.getText());
-				user.setPassword(txtPassword.getText());
-				
-				usr.save(user);
-				
-				reset();
-				
-				loadTable();
+				String nama = txtName.getText();
+		        String usernameFormatted = txtUsername.getText().toLowerCase().replaceAll("\\s+", "");
+		        String password = txtPassword.getText();
+
+		        if (password.length() < 6) {
+		            JOptionPane.showMessageDialog(null, "Password minimal 6 karakter!", "Error", JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
+
+		        User user = new User();
+		        user.setNama(nama);
+		        user.setUsername(usernameFormatted);
+		        user.setPassword(password);
+		        usr.save(user);
+		        reset();
+		        loadTable();
 			}
 		});
 		btnSave.setBackground(new Color(39, 174, 96));
@@ -114,12 +125,39 @@ public class UserFrame extends JFrame {
 		panel1.add(btnSave);
 		
 		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				User user = new User();
+		        user.setNama(txtName.getText());
+		        
+		        String usernameFormatted = txtUsername.getText().toLowerCase().replaceAll("\\s+", "");
+		        user.setUsername(usernameFormatted);
+
+		        user.setPassword(txtPassword.getText());
+		        user.setId(id);
+		        usr.update(user);
+		        reset();
+		        loadTable();
+			}
+		});
 		btnUpdate.setBackground(new Color(41, 128, 185));
 		btnUpdate.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		btnUpdate.setBounds(214, 185, 108, 31);
 		panel1.add(btnUpdate);
 		
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(id != null) {
+				    usr.delete(id);
+				    reset();
+				    loadTable();
+				} else {
+				    JOptionPane.showMessageDialog(null, "Silahkan pilih data yang akan di hapus");
+				}
+
+			}
+		});
 		btnDelete.setBackground(new Color(231, 76, 60));
 		btnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		btnDelete.setBounds(352, 185, 108, 31);
@@ -157,12 +195,21 @@ public class UserFrame extends JFrame {
 		contentPane.add(panel2);
 		panel2.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 606, 318);
-		panel2.add(scrollPane);
-		
 		tableUsers = new JTable();
+		tableUsers.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				id = tableUsers.getValueAt(tableUsers.getSelectedRow(),0).toString();
+				txtName.setText(tableUsers.getValueAt(tableUsers.getSelectedRow(),1).toString());
+				txtUsername.setText(tableUsers.getValueAt(tableUsers.getSelectedRow(),2).toString());
+				txtPassword.setText(tableUsers.getValueAt(tableUsers.getSelectedRow(),3).toString());
+
+			}
+		});
 		tableUsers.setToolTipText("Table Users");
-		scrollPane.setViewportView(tableUsers);
+		tableUsers.setBounds(10, 10, 606, 318);
+		panel2.add(tableUsers);
+		
+		loadTable();
 	}
 }

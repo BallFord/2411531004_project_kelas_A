@@ -5,6 +5,8 @@ public class Service {
     String jenis;
     double harga;
     String status;
+    String serviceName;
+    String description;
 
     public String getId() {
         return id;
@@ -37,4 +39,21 @@ public class Service {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    public String getServiceName() {
+        return serviceName;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
 }
