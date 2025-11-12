@@ -7,10 +7,9 @@ import javax.swing.JOptionPane;
 
 public class KoneksiDB {
     public static void main(String[] args) {
-        // Sesuaikan dengan database kamu
-        String url = "jdbc:mysql://localhost:3306/laundry_apps"; // tulis port biar jelas
-        String user = "root"; // default user XAMPP
-        String password = ""; // default kosong
+        String url = "jdbc:mysql://localhost:3306/laundry_apps"; 
+        String user = "root"; 
+        String password = ""; 
 
         try {
             Connection conn = DriverManager.getConnection(url, user, password);

@@ -20,7 +20,7 @@ public class LoginService {
             statement.setString(2, user.getPassword());
 
             ResultSet resultSet = statement.executeQuery();
-            return resultSet.next(); // Returns true if a matching record is found
+            return resultSet.next(); 
         } catch (SQLException e) {
             e.printStackTrace();
         }
